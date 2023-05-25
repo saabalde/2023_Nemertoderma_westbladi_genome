@@ -15,7 +15,7 @@ Herein I will assume all the relevant files are in the working directory:
 
 ### 6. Put everything together
 
-## How clean is the genome?
+### How clean is the genome?
 
 
 ---
