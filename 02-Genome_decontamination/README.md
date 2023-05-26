@@ -96,7 +96,7 @@ As you can see, Uniprot has identified a lot of different things in the genome. 
 From the '70517384-88fb-4a33-acee-82461b0bef4d.csv' table I created two files: Metazoa_contigs.txt and no_Metazoa_contigs.txt. Just use [seqtk](https://github.com/lh3/seqtk) to extract the contigs of interest:
 
     seqtk subseq pt_087_001_flye20211205meta.fasta Metazoa_contigs.txt > pt_087_001_flye20211205meta.Metazoa.fasta
-    seqtk subseq pt_087_001_flye20211205meta.fasta Mno_Metazoa_contigs.txt > pt_087_001_flye20211205meta.no_Metazoa.fasta
+    seqtk subseq pt_087_001_flye20211205meta.fasta no_Metazoa_contigs.txt > pt_087_001_flye20211205meta.no_Metazoa.fasta
 
 ### 5. Identify the sources of contamination
 Using the no_Metazoa_contigs.txt file we can also find the relevant hits in the diamond output and identify, to the finest taxonomic level possible, the source of the contmainations:
@@ -157,14 +157,41 @@ Besides contaminants from other species, the assembly will also contain mitochon
     
     while read contig
         do
-        
+        count=$( grep -c "${contig}" no_Metazoa_contigs.txt )
+        if [ $count -lt 1 ]; then
+            ${contig} >> Contig_names.Clean.txt
+        fi
+    done < Contig_names.txt
     
+    # Extract the non-mitochondrial contigs
+    seqtk subseq pt_087_001_flye20211205meta.Metazoa.fasta Contig_names.Clean.txt > pt_087_001_flye20211205meta.Metazoa.Clean.fasta
+
+### 7. Clean the HiFi reads
+Now that our genome is clean, we can use it as reference to separate contaminant from native reads using minimap2, [samtools](https://github.com/samtools/samtools), and [bam2fastq](https://github.com/jts/bam2fastq):
+
+    # Map the reads to the clean genome
+    minimap2 -ax map-pb -t 16 pt_087_001_flye20211205meta.Metazoa.Clean.fasta pt_087_001_trimmed_reads.fastq.gz | samtools sort -@16 -O BAM -o Assembly.reads.bam -
     
-    # Extract 
+    # Extract the mapped reads
+    samtools view -h -u -F 4 Assembly.reads.bam > Assembly.mapped_reads.bam
+    
+    # Extract the unmapped reads
+    samtools view -h -u -f 4 Assembly.reads.bam > Assembly.unmapped_reads.bam
+    
+    # Sort the two BAM files
+    samtools sort -n Assembly.mapped_reads.bam -o Assembly.mapped_reads.bam.sort
+    samtools sort -n Assembly.unmapped_reads.bam -o Assembly.unmapped_reads.bam.sort
+    
+    # Convert the BAM files to fastq
+    bam2fastq -o pt_087_CleanAssembly.mapped_reads#.fastq Assembly.mapped_reads.bam.sort
+    bam2fastq -o pt_087_CleanAssembly.unmapped_reads#.fastq Assembly.unmapped_reads.bam.sort
+    
+    # Compress the fastq files
+    gzip -9 pt_087_CleanAssembly.mapped_reads_M.fastq
+    gzip -9 pt_087_CleanAssembly.unmapped_reads_M.fastq
 
 
 
-### 7. Clean the reads files
 
 
 ---
