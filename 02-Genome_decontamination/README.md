@@ -140,6 +140,28 @@ Using the no_Metazoa_contigs.txt file we can also find the relevant hits in the 
 Now, you can open 'diamond.TaxID_classification' in an excel file and parse it as you wish.
 
 ### 6. Filter mitochondrial contigs
+Besides contaminants from other species, the assembly will also contain mitochondrial genomes, either native from _N. westbladi_ or from the contaminants themshelves. In either case, it is a good idea to remove them. To do so, create a custom database with the set of mitochondrial genes that you want. I limited it to Xenacoelomorpha, because all animal genomes have the same genes and it will work anyway, but you can also add other species if you think it will be more efficient.
+
+    # First, create a database from the fasta file
+    makeblastdb -in Xenacoelomorpha_mtDNA.fasta -out Xenacoelomorpha_mtDNA.fasta -dbtype nucl
+    
+    # Run blast
+    blastn -query pt_087_001_flye20211205meta.Metazoa.fasta -db Xenacoelomorpha_mtDNA.fasta \
+           -num_threads 16 -outfmt 6 -evalue 1e-5 -out Nwestbladi_mtDNA.txt
+           
+    # Extract the names of the mitochondrial contigs
+    awk '{print $1}' Nwestbladi_mtDNA.txt | sort | uniq > Nwestbladi_mtDNA.Contigs.txt
+    
+    # Create a list with the names of the non-mitochondrial contigs
+    grep '>' pt_087_001_flye20211205meta.Metazoa.fasta | sed 's/>//g' > Contig_names.txt
+    
+    while read contig
+        do
+        
+    
+    
+    # Extract 
+
 
 
 ### 7. Clean the reads files
