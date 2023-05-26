@@ -89,22 +89,16 @@ Now that all files are ready, run BlobTools:
 ### How clean is the genome?
 Exloring the webserver you will realize BlobTools has generated several figures and tables, full of interesting information. We all recognise this figure, which summarises the taxonomic information and coverage of all contigs in the assembly: the 'blobplot'
 
+![image](https://github.com/saabalde/2023_Nemertoderma_westbladi_genome/blob/main/02-Genome_decontamination/Nwestbladi_blobplot.png)
+
+As you can see, Uniprot has identified a lot of different things in the genome. This was expected, so now we need to separate all the contigs that are not of interest. From the '70517384-88fb-4a33-acee-82461b0bef4d.csv' table, I will create a list with the names of all the contigs that are not 'Metazoa'. It is likely that some of these will also be contaminants, but it is hard to tell just from this analysis. Xenacoelomorpha is not a very well represented phylum in the databases and this results might just be an artifact. I will check this in a saparate analysis.
+
+From the '70517384-88fb-4a33-acee-82461b0bef4d.csv' table I created two files: Metazoa_contigs.txt and no_Metazoa_contigs.txt. Just use [seqtk](https://github.com/lh3/seqtk) to extract the contigs of interest:
+
+    seqtk subseq pt_087_001_flye20211205meta.fasta Metazoa_contigs.txt > pt_087_001_flye20211205meta.Metazoa.fasta
+    seqtk subseq pt_087_001_flye20211205meta.fasta Mno_Metazoa_contigs.txt > pt_087_001_flye20211205meta.no_Metazoa.fasta
 
 
-
-
-
-I used the '70517384-88fb-4a33-acee-82461b0bef4d.csv' to explore the taxonomy of all contigs and identify which ones I need to remove
-
-
-
-
-## This is the final tree inferred with IQ-TREE
-
-All nodes have maximum statistic support unless otherwise specified.
-![image](../Phylogenomics/IQtree_437genes.png)
-
-Modified version of Fig. 3.
 
 ---
 
