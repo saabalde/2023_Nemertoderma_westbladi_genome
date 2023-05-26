@@ -86,23 +86,63 @@ Now that all files are ready, run BlobTools:
     # When you are done, close everything and deactivate the environment
     conda deactivate
 
-### How clean is the genome?
+### 4. How clean is the genome?
 Exloring the webserver you will realize BlobTools has generated several figures and tables, full of interesting information. We all recognise this figure, which summarises the taxonomic information and coverage of all contigs in the assembly: the 'blobplot'
 
 ![image](https://github.com/saabalde/2023_Nemertoderma_westbladi_genome/blob/main/02-Genome_decontamination/Nwestbladi_blobplot.png)
 
-As you can see, Uniprot has identified a lot of different things in the genome. This was expected, so now we need to separate all the contigs that are not of interest. From the '70517384-88fb-4a33-acee-82461b0bef4d.csv' table, I will create a list with the names of all the contigs that are not 'Metazoa'. It is likely that some of these will also be contaminants, but it is hard to tell just from this analysis. Xenacoelomorpha is not a very well represented phylum in the databases and this results might just be an artifact. I will check this in a saparate analysis.
+As you can see, Uniprot has identified a lot of different things in the genome. This was expected, so now we need to separate all the contigs that are not of interest. From the '70517384-88fb-4a33-acee-82461b0bef4d.csv' table, I will create a list with the names of all the contigs that are not 'Metazoa' (almost 20% of the assembled genome). It is likely that some of these will also be contaminants, but it is hard to tell just from this analysis. Xenacoelomorpha is not a very well represented phylum in the databases and this results might just be an artifact. I will check this in a saparate analysis.
 
 From the '70517384-88fb-4a33-acee-82461b0bef4d.csv' table I created two files: Metazoa_contigs.txt and no_Metazoa_contigs.txt. Just use [seqtk](https://github.com/lh3/seqtk) to extract the contigs of interest:
 
     seqtk subseq pt_087_001_flye20211205meta.fasta Metazoa_contigs.txt > pt_087_001_flye20211205meta.Metazoa.fasta
     seqtk subseq pt_087_001_flye20211205meta.fasta Mno_Metazoa_contigs.txt > pt_087_001_flye20211205meta.no_Metazoa.fasta
 
+### 5. Identify the sources of contamination
+Using the no_Metazoa_contigs.txt file we can also find the relevant hits in the diamond output and identify, to the finest taxonomic level possible, the source of the contmainations:
+
+    # Extract the relevant lines from the diamond output
+    while read seq
+        do
+        grep -w "${seq}" ../03-DIAMOND/diamond.out >> diamond.out
+    done < Relevant_contigs.txt
+    
+    # Extract the protein ID
+    awk '{print $5}' diamond.out | sort | uniq | tr '|' '\t' | awk '{print $3}' > diamond.GeneID
+    
+    # Now, this is a bit tricky and, admitedly, dirty. The link between the gene ID and the taxonomic information is stored in 
+    # many thousands of files. Each file corresponds to one gene, so we need to locate them.
+    # First, put them all together in a directory and uncompress them
+    cp */*/*idmapping.gz uncompress_files/
+    gzip -d uncompress_files/*
+    
+    # Second, find the file about oyur genes of interes
+    while read id
+        do
+        echo $id
+        grep -wl "$id" uncompress_files/*
+    done < diamond.GeneID
+    
+    # This can take a long time (>2 days if you do not parallelize). Now, since you have the file names, you can copy them to a 
+    # new directory called 00-TaxID
+    cat 00-TaxID/* | grep 'NCBI_TaxID' | awk '{print $3}' | sort | uniq > diamond.TaxID
+    
+    # And fourth, create a new file including the full taxonomic information of each TaxID
+    while read id
+        do
+        classification=$( grep -w "^$id" fullnamelineage.dmp | sed -E 's/\t//g' | sed 's/\ //g' | tr '|' '\t' | awk '{print $3}' | sed 's/cellularorganisms\;//g' )
+        printf "%s\t%s\n" "$id" "$classification"
+    done < diamond.TaxID > diamond.TaxID_classification
+    
+    # Don't forget to delete the uncompress_files directory
+    rm -r uncompress_files
+
+Now, you can open 'diamond.TaxID_classification' in an excel file and parse it as you wish.
+
+### 6. Filter mitochondrial contigs
 
 
----
-
-## Identify the contaminant contigs
+### 7. Clean the reads files
 
 
 ---
