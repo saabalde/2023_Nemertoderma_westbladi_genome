@@ -191,6 +191,16 @@ Now that our genome is clean, we can use it as reference to separate contaminant
     gzip -9 pt_087_CleanAssembly.unmapped_reads_M.fastq
 
 
+## Make sure the metazoan contigs come from _Nemertoderma westbladi_
+Brief explanation
+
+### 1. Genomic distances: Skmer
+[Skmer](https://github.com/shahab-sarmashghi/Skmer)
+
+
+### 2. Phylogenetic inference
+[ASTRAL](https://github.com/smirarab/ASTRAL)
+[IQ-TREE](http://www.iqtree.org/doc/Tutorial)
 
 
 
