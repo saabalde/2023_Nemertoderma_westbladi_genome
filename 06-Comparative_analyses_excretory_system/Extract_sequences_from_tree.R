@@ -1,9 +1,17 @@
-setwd("/home/saabalde/Escritorio/Nwestbladi_genome/Ultrafiltration_genes/")
+## This script is quite straightforward: after inspecting the inferred tree, I used the GenBank sequences to identify 
+## the clades that correspond to the ultrafiltration genes. Then, I selected two sequences that I used to obtain the
+## most recent common ancestor , from which I extracted the offspring tips.
 
+## Set the working directory (if you need to)
+#setwd("")
+
+## Load the ape library
 library(ape)
 
+## Load the phylogenetic tree
 my_tree <- read.tree("AllSpecies_and_Genes.diamond.fas.treefile")
 
+## for each node, obtain the MRCA and extract the descending tips
 getMRCA(my_tree, tip = c("Cnidaria_Scyphozoa_Rhopilema_esculentum_Proteins_mRNA.RE14024", 
                       "Annelida_Polychaeta_Paraescarpia_echinospica_Proteins_PE_Scaf11609_2_9"))
 clade_01 <- extract.clade(my_tree, node = 868)
@@ -40,6 +48,7 @@ getMRCA(my_tree, tip = c("Annelida_Polychaeta_Paraescarpia_echinospica_Proteins_
                          "QRF78303.1"))
 clade_09 <- extract.clade(my_tree, node = 1300)
 
+## Put them all together
 all_branches <- c(clade_01$tip.label, clade_02$tip.label, clade_03$tip.label, clade_04$tip.label,
                   clade_05$tip.label, clade_06$tip.label, clade_07$tip.label, clade_08$tip.label,
                   clade_09$tip.label, "Arthropoda_Crustacea_Idotea_baltica_Genome_Proteins_MCL4127324_1",
@@ -49,10 +58,10 @@ all_branches <- c(clade_01$tip.label, clade_02$tip.label, clade_03$tip.label, cl
                   "Mollusca_Bivalvia_Pecten_maximus_Proteins_XP_033727048_1", 
                   "Mollusca_Bivalvia_Pecten_maximus_Proteins_XP_033727049_1")
 
+## Remove the GenBank sequences from the list
 all_branches_but_QRF <- all_branches[-grep("QRF78", all_branches)]
 
-#################
-
+## Print the tip labels of each gene and store them somewhere
 eya <- clade_07$tip.label
 six1_2 <- clade_06$tip.label
 pou3 <- clade_05$tip.label
@@ -67,4 +76,3 @@ clade_nephrin <- extract.clade(my_tree, 877)
 nephrin <- clade_nephrin$tip.label
 kirre <- setdiff(clade_01$tip.label, clade_nephrin$tip.label)
 zo1 <- clade_03$tip.label
-
