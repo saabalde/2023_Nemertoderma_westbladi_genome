@@ -192,14 +192,25 @@ Now that our genome is clean, we can use it as reference to separate contaminant
 
 
 ## Make sure the metazoan contigs come from _Nemertoderma westbladi_
-Brief explanation
+As outlined above, BlobTools identified the most likely source of all contigs in the assembly, but that analysis did not exclude metazoan contigs. Hence, we cannot know if our genome actually comes from _N. westbladi_ or if other animals were sequenced instead. To test this, I have compared our genome to published genomes from other phyla. The list of reference genomes can be found in the attached spreadsheet 'SRA_genomes.xlsx'. I have basically followed two approaches: first, I used kmer to calculate the distances among all genomes; second, I used IQ-TREE to infer a phylogenetic tree. In both cases, the goal is to make sure we recover our genome in a clade with the two Acoela genomes.
 
 ### 1. Genomic distances: Skmer
-[Skmer](https://github.com/shahab-sarmashghi/Skmer)
+[Skmer](https://github.com/shahab-sarmashghi/Skmer) is a tool designed to extract all kmer from a set of genomes, compare them and calculate the genomic distances. Although this tool was originally designed to identify species from skimming data, a sort of barcoding but with genome-wide information, the same principle can be applied here. 
 
 
 ### 2. Phylogenetic inference
-[annotation](https://github.com/saabalde/2023_Nemertoderma_westbladi_genome/tree/main/04-Annotation)
+After annotating the _N. westbladi_ genome, we used this proteome to infer a phylogenetic tree, including the same species as above. We have not seen how to annotate the genome, yet, but you can check this step [here: genome annotation](https://github.com/saabalde/2023_Nemertoderma_westbladi_genome/tree/main/04-Annotation).
+This was a relatively quick test, so I will not delve in depth into the reasoning of each analysis. If you are interested in learning a bit more about this, you can follow [this much more detailed explanation](https://github.com/saabalde/2023_Lventricosus_Species_Complex/tree/main/Phylogenomics). It's the same idea.
+
+[Orthofinder](https://github.com/davidemms/OrthoFinder)
+
+[MAFFT](https://mafft.cbrc.jp/alignment/software/)
+
+[BMGE](https://doi.org/10.1186/1471-2148-10-210)
+
+[FASconCat](https://github.com/PatrickKueck/FASconCAT-G)
+
+[IQ-TREE tutorial](http://www.iqtree.org/doc/Assessing-Phylogenetic-Assumptions)
 
 [ASTRAL](https://github.com/smirarab/ASTRAL)
 
