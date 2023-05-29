@@ -9,8 +9,8 @@ library(tidyr)
 library(FSA)
 
 
-## Set the working directory
-setwd("/home/saabalde/Escritorio/Nwestbladi_genome/Ultrafiltration_genes/00-Filtered_hits/")
+## Set the working directory, if necessary
+#setwd("")
 
 
 ## Load the data
