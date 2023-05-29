@@ -116,14 +116,14 @@ First, I used 'Ultrafiltration_genes.AllSpecies.R' to visualize the results, and
 
 ![image](https://github.com/saabalde/2023_Nemertoderma_westbladi_genome/blob/main/06-Comparative_analyses_excretory_system/Ultrafiltration_genes.AllSpecies.png)
 
-Second, given the huge variation observed I decided to check the differences in this gene and just plot those significantly different. Very briefly, I used the the Shapiro-Wilk’s method and the Barlett test were used to check if they follow a normal distribution and the homogeneity of their variances, respectively. For each gene, the differences among clades were tested with either an ANOVA or a Kruskal-Wallis test, depending on the result of the normality and homoscedasticity tests. Finally, the Bonferroni correction (ANOVA) and the Dunn test (Kruskal-Wallis) were selected to run pairwise comparisons in all cases identified as statistically different.
+Second, given the huge variation observed I decided to check the differences in this gene and just plot those significantly different, for which I created the script 'Ultrafiltration_genes.AllSpecies.Significances_Summary.R'. Very briefly, I used the the Shapiro-Wilk’s method and the Barlett test were used to check if they follow a normal distribution and the homogeneity of their variances, respectively. For each gene, the differences among clades were tested with either an ANOVA or a Kruskal-Wallis test, depending on the result of the normality and homoscedasticity tests. Finally, the Bonferroni correction (ANOVA) and the Dunn test (Kruskal-Wallis) were selected to run pairwise comparisons in all cases identified as statistically different.
 
 ![image](https://github.com/saabalde/2023_Nemertoderma_westbladi_genome/blob/main/06-Comparative_analyses_excretory_system/Ultrafiltration_genes.AllSpecies.Significances_Summary.png)
 
-As you can see, many of the statistically significant differences (summarize in brackets) are related to Acoelomorpha. This is interesting, because it indicates the relativley conserve structure that these genes have in animals with an excretory system. However, we need to run a final test. Some authors have proposed 
+As you can see, many of the statistically significant differences (summarize in brackets) are related to Acoelomorpha. This is interesting, because it indicates the relativley conserve structure that these genes have in animals with an excretory system. However, we need to run a final test. Some authors have proposed that the accelerated evolutionary rates of Acoelomorpha influence other findings in this group, such as gene content, chromosom rearrangements, and so on. To test if the differences observed are the result of faster substitution rates, I created the script 'Branch_lengths_analysis.R', which reads the branch lengths of all sequences on each gene tree (one per gene of interest) and calculates if the differences among clades are statistically significant.
 
+Very briefly, branches are indeed longer in Acoelomorpha, but the differences are statistically significant between all clades, so I am not sure this can be used as an argument to justify the observed results
 
+![image](https://github.com/saabalde/2023_Nemertoderma_westbladi_genome/blob/main/06-Comparative_analyses_excretory_system/Branch_lengths_analysis.Barplot.png)
 
-
-
-Ultrafiltration_genes.AllSpecies.Significances_Summary.R
+---
