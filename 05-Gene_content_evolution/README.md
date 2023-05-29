@@ -2,9 +2,19 @@
 Analysis of gene content is an interesting approach to understanding animal evolution. In particular, it would be interesting to know whether the morphological simplicity of Xenacoelomorpha is somehow correlated with some form of genomic simplicity. Previous studies (see [this](https://www.biorxiv.org/content/10.1101/2022.06.24.497508v2.full) and [this](https://doi.org/10.1126/science.aau6173)) have shown that both _Xenoturbella_ and Acola have a similar number of genes than other bilaterians, so this might not be true. Likewise, we see a similar pattern in [our annotation](https://github.com/saabalde/2023_Nemertoderma_westbladi_genome/tree/main/04-Annotation) of the _N. westbladi_ genome. However, it would be interesting to see if, beyond the number of genes, we find the same gene families present in other animals. To test this, we have compared the gene content of _N. westbladi_ to the genomes listed in the attached file 'SRA_genomes.xlsx'. You can download their proteomes from GenBank.
 
 ### 1. Filter redundancies in the proteomes
-It is common to find duplicates of the same protein or recently duplicated paralogs (with very little variation from the original gene) in the annotation of a genome. Hence, one of the first things we can do is to remove this redundancy. We will be looking at presence/absence of gene families, so this is not particularly important, but reducing the number of proteins can signifcantly reduce computing time. I have used [CD-HIT](https://sites.google.com/view/cd-hit) to cluster sequences that are more than **XXXX**% similar.
+It is common to find duplicates of the same protein or recently duplicated paralogs (with very little variation from the original gene) in the annotation of a genome. Hence, one of the first things we can do is to remove this redundancy. We will be looking at presence/absence of gene families, so this is not particularly important, but reducing the number of proteins can signifcantly reduce computing time. I have used [CD-HIT](https://sites.google.com/view/cd-hit) to cluster sequences that are more than 95% similar.
 
-    CODE HERE
+    # First add the name of the species to the header
+    for i in $( ls *faa | s 's/\.faa//g' )
+        do
+        sed -i '/>/ s/>/>${i}_/g' ${i}.faa
+    done
+    
+    # Run CD-HIT
+    for i in *Proteins.faa
+        do
+        cd-hit-est -i ${i} -o ${i}.cdhit.faa -T 2 -M 10000 -c 0.95
+    done
 
 ### 2. Functional annotation
 I have tried to cluster the proteins in orthogroups in several ways, but working just with functionally annotated proteins seems to return the best results. There are no big differences in the number of genes shared among phyla, but by comparing functionally annotated proteins the number of unique proteins (i.e. those present only in a given phylum or clade) is drastically reduced. To annotate the proteins, I have used [pfam_scan](https://anaconda.org/bioconda/pfam_scan) to compare all proteins to the [PFAM 35 database](http://pfam.xfam.org/).
@@ -42,7 +52,8 @@ From the set of annotated proteins, I will use [OrthoFinder](https://github.com/
     cp *pfam.aa 01-Create_orthogroups/
     
     # Run OrthoFinder
-    CODE HERE
+    python3 orthofinder.py -f 01-Create_orthogroups/ -S diamond -M msa -A mafft -T fasttree -t 8 -a 8
+
 
 ### 4. Summarize this result
 OrthoFinder has generated a 'Orthogroups.GeneCount.tsv' file, which includes a list of all orthogroups (as rows) and the number of copies on each species (as columns). I have parsed this table to make three figures: the presence/absence of each orthogroup in the four clades of interest (Acoelomorpha, Cnidaria, Deuterostomia, Protostomia), percentage of "absent" genes (i.e. if we consider all genes shared by Cnidaria and one of the other clades as "present in Metazoa", how many are missing in each clade?), and number of genes shared between Acoela and Nemertodermatida.
