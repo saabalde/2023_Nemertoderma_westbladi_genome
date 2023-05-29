@@ -71,10 +71,59 @@ At this point, you will have a complete list of all the ultrafiltration genes pr
     # Infer the tree
     iqtree -s AllSpecies_and_Genes.Ultrafiltration_v2.fas -m LG -bb 1000 -alrt 1000 -bnni -nt AUTO -safe
 
-This is the result. You will see some sequences are misplaced, but this is likely an artifact during tree inference:
+This is the result. You will see some sequences are misplaced, but this is likely an artifact during tree inference. the tree looks generally fine:
 
 ![image](https://github.com/saabalde/2023_Nemertoderma_westbladi_genome/blob/main/06-Comparative_analyses_excretory_system/AllSpecies_and_Genes.Ultrafiltration_v2.fas.treefile.png)
 
+Now, we can use the names of the genes to generate all the metrics we want to analyse. This is fairly easy. First, calculate the length of all sequences
+
+    awk '/^>/ {if (seqlen){print seqlen}; print ;seqlen=0;next; } { seqlen += length($0)}END{print seqlen}' ../AllSpecies_and_Genes.Ultrafiltration.fasta | tr '\n' ';' | tr '>' '\n' | tr ';' '\t' > AllSpecies_and_Genes.Ultrafiltration.seq_length
+
+Second, calculate the number of exons per gene:
+
+    # Create a list with the names of the sequences
+    grep '>' AllSpecies_and_Genes.Ultrafiltration_v2.fasta | sed 's/>//g' > AllSpecies_and_Genes.Ultrafiltration.list
+    
+    # Concatenate all GFF files into one
+    cat *gff* > all_species.gff
+    
+    # Find the name of the name of the sequence on the GFF file and count how many exons it has
+    while read id
+        do
+        echo ${id}
+        species=$( echo ${id} | sed 's/_Proteins_.*//g' )
+        gene=$( echo ${id} | sed 's/.*_Proteins_//g' )
+        n_exons=$( grep "${gene}" all_species.gff | grep -c "CDS" )
+        printf "%s\t%s\t%s\n" "${species}" "${gene}" "${n_exons}" >> AllSpecies_and_Genes.Ultrafiltration.N_Exons
+    done < AllSpecies_and_Genes.Ultrafiltration.list
+
+Third, use the coordinates to extract the length of each exon:
+
+    while read id
+        do
+        echo ${id}
+        species=$( echo ${id} | sed 's/_Proteins_.*//g' )
+        gene=$( echo ${id} | sed 's/.*_Proteins_//g' )
+        grep "${gene}" all_species.gff | grep "CDS" > tmp; awk -v var="$id" '{print var,$1,$4,$5,$9}' tmp >> AllSpecies_and_Genes.Ultrafiltration.All_Exons
+        rm tmp
+    done < AllSpecies_and_Genes.Ultrafiltration.list
+
+Note that the 'AllSpecies_and_Genes.Ultrafiltration.All_Exons' list is much, much longer than the others. This is because we have calculated the length of all exons, use it to calculate the average exon length for each gene (I did this in a spreadsheet, but I'm sure it should be relatively easy to do on the command line). With all three tables, I built the attached spreadsheet 'Ultrafiltration_genes.AllSpecies.txt', with 13 columns: Main_clade, Acoelomorph_or_not, Phylum, Species, Sequence, Blast, Blast_modified, Structural_or_Transcription, Prot_length, N_exons, Av_exon_length, Av_intron_length, Gene_length.
+I do not include it here becuse there is too much variance in the data, with thousands of base pairs difference between an intron and the other, but I also calculated the average intron length (the number of base pairs between exons) and the gene length (the number of base pairs between the firsr nucleotide of the first exon and the last nucleotide of the last exon). you can ignore them.
+
+To analyze this table, I created two R scripts:
+First, I used 'Ultrafiltration_genes.AllSpecies.R' to visualize the results, and have a glimpse of the variation in the data. The script is commented so I won't delve into careful explanations here, but it basically plots a boxplot for each of the metric of interest, separating the data for clade (Acoelomorpha, Cnidaria, Deuterostomia, and Protostomia) and type of gene (Structural gene or transcription factor). These are the final plots:
+
+![image](https://github.com/saabalde/2023_Nemertoderma_westbladi_genome/blob/main/06-Comparative_analyses_excretory_system/Ultrafiltration_genes.AllSpecies.png)
+
+Second, given the huge variation observed I decided to check the differences in this gene and just plot those significantly different. Very briefly, I used the the Shapiro-Wilk’s method and the Barlett test were used to check if they follow a normal distribution and the homogeneity of their variances, respectively. For each gene, the differences among clades were tested with either an ANOVA or a Kruskal-Wallis test, depending on the result of the normality and homoscedasticity tests. Finally, the Bonferroni correction (ANOVA) and the Dunn test (Kruskal-Wallis) were selected to run pairwise comparisons in all cases identified as statistically different.
+
+![image](https://github.com/saabalde/2023_Nemertoderma_westbladi_genome/blob/main/06-Comparative_analyses_excretory_system/Ultrafiltration_genes.AllSpecies.Significances_Summary.png)
+
+As you can see, many of the statistically significant differences (summarize in brackets) are related to Acoelomorpha. This is interesting, because it indicates the relativley conserve structure that these genes have in animals with an excretory system. However, we need to run a final test. Some authors have proposed 
 
 
 
+
+
+Ultrafiltration_genes.AllSpecies.Significances_Summary.R
