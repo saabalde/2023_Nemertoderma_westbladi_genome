@@ -44,8 +44,16 @@ From the set of annotated proteins, I will use [OrthoFinder](https://github.com/
     # Run OrthoFinder
     CODE HERE
 
-### 4. 
+### 4. Summarize this result
+OrthoFinder has generated a 'Orthogroups.GeneCount.tsv' file, which includes a list of all orthogroups (as rows) and the number of copies on each species (as columns). I have parsed this table to make three figures: the presence/absence of each orthogroup in the four clades of interest (Acoelomorpha, Cnidaria, Deuterostomia, Protostomia), percentage of "absent" genes (i.e. if we consider all genes shared by Cnidaria and one of the other clades as "present in Metazoa", how many are missing in each clade?), and number of genes shared between Acoela and Nemertodermatida.
+I have created three R scripts to plot these results: 'Gene_content_UpSet.R', 'Missing_genes.R', and 'VennDiagram.R'. I could make a single R script for all of them but, given I will merge them afterwards on Inkscape, I don't need to and it is easier to find a specific function this way. The three scripts are commented with further details of what they do.
 
+As you will see in a moment, despite having similar number of genes than other animals, acoelomorphs are characterize by an important reduction in gene content. A huge percentage of the genes shared between other clades are missing in Acoelomorpha. In order to test if genome completeness might be biasing this result, I decided to run [BUSCO](https://busco.ezlab.org/) over the four datasets, result that I summarise with the Rscript 'BUSCO_all.R'. Long story short: this is not the reason why so many genes are absent in Acoelomorpha.
 
+To further explore this result, I ran an enrichment analysis over the set of "absent genes" to see if any biological function was overrepresented. The rationale is easy: if acoelomorphs have fewer genes because they are morphologically simple, then it might be possible that some of the genes related to the development of these structures (e.g. the excretory system) are missing. I ran this analysis on [Blast2Go](https://www.blast2go.com/), but did not find anything.
 
+I summarize all these results into a single figure. The silhouettes were downloaded from [PhyloPic](https://www.phylopic.org/):
 
+![image](https://github.com/saabalde/2023_Nemertoderma_westbladi_genome/blob/main/05-Gene_content_evolution/Gene_content.png)
+
+---
