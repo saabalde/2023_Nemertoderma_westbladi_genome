@@ -75,7 +75,11 @@ This is the result. You will see some sequences are misplaced, but this is likel
 
 ![image](https://github.com/saabalde/2023_Nemertoderma_westbladi_genome/blob/main/06-Comparative_analyses_excretory_system/AllSpecies_and_Genes.Ultrafiltration_v2.fas.treefile.png)
 
-Now, we can use the names of the genes to generate all the metrics we want to analyse. This is fairly easy. First, calculate the length of all sequences
+From here, the first thing we can do is simple: analyse the pattern of gene presence and absence. I have summarise these results in the following figure, note that the black dots are genes not found here, but already reported in previous studies. As you can see, _Osr_ is missing in all cnidarian and acoelomorph species (and was not found in the _Xenoturbella_ transcriptomes either). This is interesting, because this is the gene that triggers the formation of the nephridia in vertebrates and tubules of Malpigi in _Drosophila_. In our perspective, this supports the Nephrozoa hypothesis, which states that Xenacoelomorpha is an early diverging bilaterian, and that the _Osr_ is an innovation of the ancestor shared between protostomes and deuterostomes that led to the developemnt of this system.
+
+![image](https://github.com/saabalde/2023_Nemertoderma_westbladi_genome/blob/main/06-Comparative_analyses_excretory_system/Ultrafiltration_genes.Presence_Absence.png)
+
+Beyond the presence and absence of these genes, we can use the GFF and fasta files and to generate all the metrics we want to analyse. This is fairly easy. First, calculate the length of all sequences:
 
     awk '/^>/ {if (seqlen){print seqlen}; print ;seqlen=0;next; } { seqlen += length($0)}END{print seqlen}' ../AllSpecies_and_Genes.Ultrafiltration.fasta | tr '\n' ';' | tr '>' '\n' | tr ';' '\t' > AllSpecies_and_Genes.Ultrafiltration.seq_length
 
