@@ -1,0 +1,13 @@
+BUSCO,Clade,Number,Percentage
+Complete,Acoelomorpha,845,88.6
+Fragmented,Acoelomorpha,13,1.4
+Missing,Acoelomorpha,96,10
+Complete,Cnidaria,921,96.6
+Fragmented,Cnidaria,4,0.4
+Missing,Cnidaria,29,3
+Complete,Deuterostomia,938,98.3
+Fragmented,Deuterostomia,0,0
+Missing,Deuterostomia,16,1.7
+Complete,Protostomia,940,98.6
+Fragmented,Protostomia,1,0.1
+Missing,Protostomia,13,1.3
