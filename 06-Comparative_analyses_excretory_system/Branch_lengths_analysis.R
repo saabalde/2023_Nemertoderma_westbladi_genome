@@ -4,8 +4,8 @@
 ################################################
 
 
-## Define my working environment
-setwd("/home/saabalde/Escritorio/Nwestbladi_genome/Ultrafiltration_genes/00-Filtered_hits/Per_gene_alignments/")
+## Define my working environment, if necessary
+#setwd("")
 
 
 ## Load modules
