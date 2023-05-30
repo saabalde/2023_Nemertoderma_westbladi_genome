@@ -66,11 +66,6 @@ Once the genome is indexed, we can map the reads to the genome:
          --outFileNamePrefix SRR2682004 --outSAMtype BAM SortedByCoordinate --outBAMsortingThreadN 1 \
          --chimSegmentMin 40 --twopassMode Basic --limitBAMsortRAM 14500000000
 
-Once you have done this for the two files, you can merge them with [samtools](https://github.com/samtools/samtools):
-
-    samtools merge RNAseq_mapped.bam SRR2682004Aligned.sortedByCoord.out.bam SRR8491950Aligned.sortedByCoord.out.bam
-    samtools sort RNAseq_mapped.bam -o RNAseq_mapped.sorted.bam
-
 ### 3. Protein mapping
 Selecting the right set of proteins is crucial for this step. the closer they are to your genome the better, since they will be easier to map and you will have more evidence for BRAKER. Unfortunately, the closest published genome to _N. westbladi_ is either _P. naikaiensis_ or _S. roscoffensis_, which diverged from _Nemertoderma_ more than 500 millions years ago. Thus, I will use three sources of proteins to maximize the changes of mapping the major amount of genes possible: (1) the Metazoa dataset from [OrthoDB](https://www.orthodb.org/?level=33208&species=33208), (2) the annotation of [_P. naikaiensis_](https://doi.org/10.1093/gigascience/giz023), and (3) a custom dataset of orthogroups inferred from [published transcriptomes](https://www.ncbi.nlm.nih.gov/sra/?term=Xenacoelomorpha).
 
@@ -79,10 +74,23 @@ After merging the three datasets into one fasta, I used [ProtHint](https://githu
     # The concatenated fasta file is called 'All_references.faa'
     
     # Remove redundancies
-    
+    cd-hit-est -i All_references.faa -o All_references.cdhit.0.90.faa -T 2 -M 10000 -c 0.95
     
     # Map them to the genome
     prothint.py --threads 10 --cleanup --evalue 1e-25 pt_087_001_flye20211205meta.Metazoa.Clean.fasta.masked All_references.cdhit.0.90.faa
 
+However, the output of this analysis kept failing on BRAKER, so I decided to feed the 'All_references.faa' file directly. Let BRAKER run the mapping.
 
 ### 4. Annotation
+Now that all files are prepared, it is as easy as running the BRAKER pipeline. The only thing that needs some consideration is that the installation might need some tuning, because the different versions require different prerequisites. For instance, from Augustus 3.3.3 to 3.4.0 changes the version of perl, which changes the packages that the program uses to parallelise the analysis. In the version 3.4.0, the one I used, the CRF training algorithm (in theory more accurate than HMM) does not work. In my case it is not a problem, as I have run several tests and haven't noticed any improvement from HMM to CRF, but it is worth to keep this in mind.
+
+To run the program, simply type:
+
+    braker.pl --cores 10 --etpmode --verbosity=4 --softmasking --filterOutShort  \
+              --gff3 --min_contig=20000 --species=Nemertoderma_westbladi \
+              --genome pt_087_001_flye20211205meta.Metazoa.Clean.fasta.masked \
+              --bam=SRR2682004Aligned.sortedByCoord.out.bam,SRR8491950Aligned.sortedByCoord.out.bam --prot_seq=All_references.cdhit.0.90.faa
+
+And that's it.
+
+---
