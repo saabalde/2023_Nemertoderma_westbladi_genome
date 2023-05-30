@@ -22,5 +22,33 @@ It looks like we got a quite complete genome! As you can see in the figure, the 
 
 ![image](https://github.com/saabalde/2023_Nemertoderma_westbladi_genome/blob/main/03-Quality_control/BUSCO_results.png)
 
-XXX
+These are pretty basic analyses that you can find in any genome report. Moving into a little more complexity, we also analyzed the kmer spectra of the genome. First, we inferred the kmer spectra with [Jellyfish](https://github.com/gmarcais/Jellyfish) and then used [KAT](https://github.com/TGAC/KAT) to analysed it:
+
+    # Calculate the kmer spectra from the genome and the reads
+    jellyfish count -C -m 21 -s 2000000000 -t 8 pt_087_001_flye20211205meta.Metazoa.Clean.fasta -o kmers_genome.jf
+    jellyfish count -C -m 21 -s 2000000000 -t 8 pt_087_001_trimmed_reads.fastq.gz -o kmers_reads.jf
+
+    # Convert the kmer hashes to histograms
+    jellyfish histo -t 8 kmers_reads.jf > kmers_reads.histo
+    jellyfish histo -t 8 kmers_genome.jf > kmers_genome.histo
     
+    # Compare the two spectra with KAT
+    kat comp -t 8 -o QC-Reads_vs_Assembly kmers_reads.jf kmers_genome.jf
+    
+    # Plot the individual spectra
+    kat plot spectra-hist -o QC-Reads_spectra kmers_reads.histo
+    kat plot spectra-hist -o QC-Genome_spectra.png kmers_genome.histo
+
+As you can see in the figure below, the results are not fantastic. The curve looks basically like an exponential function, with too many unique (or, at least, repeated too few times) kmers. This could be due to low coverage in the assembly, which we also suspected from other analyses.
+
+![image](https://github.com/saabalde/2023_Nemertoderma_westbladi_genome/blob/main/03-Quality_control/KAT-Reads_vs_Assembly.png)
+
+Finally, we compared our genome to the already published _P. naikaiensis_ and _S. roscoffensis_. Thus far, we include an old _M. westbladi_ genome sequenced with Illumina to compare the performance of PacBio with respect to short-read approaches. I created the Rscripts 'Genome_Length.R' and 'Calculate_stats.R' for that matter. The former compares the assembly length and conting lengths (before and after decontamination), whereas the former uses the annotation files to compare several metrics such as number of genes per contig, number of exons per gene, or intron length. The two scripts are fully commented, but you can see in the figures below how, despite the worse contiguity of our genome, all the metrics analyzed are comparable.
+
+Note: unfortunately, the annotation files are too big for GitHub so you will have to download them from somewhere else. I include all the results in the next figure and hope you still find the script useful.
+
+![image](https://github.com/saabalde/2023_Nemertoderma_westbladi_genome/blob/main/03-Quality_control/Comparisons-Genome_stats.png)
+
+Overall, we are satisfied with our results. It is true that we could have a much more contiguos genomes, such fragmentation precludes analyses of synteny, but we have a pretty complete genome and, more importantly, the annotated proteins are complete. It will definitely help us understand better the evolution of acoelomorph genomes.
+
+---
