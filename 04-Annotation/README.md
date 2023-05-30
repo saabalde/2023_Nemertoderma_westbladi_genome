@@ -72,6 +72,6 @@ Once you have done this for the two files, you can merge them with [samtools](ht
     samtools sort RNAseq_mapped.bam -o RNAseq_mapped.sorted.bam
 
 ### 3. Protein mapping
-
+Selecting the right set of proteins is crucial for this step. the closer they are to your genome the better, since they will be easier to map and you will have more evidence for BRAKER. Unfortunately, the closest published genome to _N. westbladi_ is either _P. naikaiensis_ or _S. roscoffensis_, which diverged from _Nemertoderma_ more than 500 millions years ago. Thus, I will use three sources of proteins to maximize the changes of mapping the major amount of genes possible: (1) 
 
 ### 4. Annotation
