@@ -89,7 +89,8 @@ To run the program, simply type:
     braker.pl --cores 10 --etpmode --verbosity=4 --softmasking --filterOutShort  \
               --gff3 --min_contig=20000 --species=Nemertoderma_westbladi \
               --genome pt_087_001_flye20211205meta.Metazoa.Clean.fasta.masked \
-              --bam=SRR2682004Aligned.sortedByCoord.out.bam,SRR8491950Aligned.sortedByCoord.out.bam --prot_seq=All_references.cdhit.0.90.faa
+              --bam=SRR2682004Aligned.sortedByCoord.out.bam,SRR8491950Aligned.sortedByCoord.out.bam \
+              --prot_seq=All_references.cdhit.0.90.faa
 
 And that's it.
 
