@@ -72,6 +72,17 @@ Once you have done this for the two files, you can merge them with [samtools](ht
     samtools sort RNAseq_mapped.bam -o RNAseq_mapped.sorted.bam
 
 ### 3. Protein mapping
-Selecting the right set of proteins is crucial for this step. the closer they are to your genome the better, since they will be easier to map and you will have more evidence for BRAKER. Unfortunately, the closest published genome to _N. westbladi_ is either _P. naikaiensis_ or _S. roscoffensis_, which diverged from _Nemertoderma_ more than 500 millions years ago. Thus, I will use three sources of proteins to maximize the changes of mapping the major amount of genes possible: (1) 
+Selecting the right set of proteins is crucial for this step. the closer they are to your genome the better, since they will be easier to map and you will have more evidence for BRAKER. Unfortunately, the closest published genome to _N. westbladi_ is either _P. naikaiensis_ or _S. roscoffensis_, which diverged from _Nemertoderma_ more than 500 millions years ago. Thus, I will use three sources of proteins to maximize the changes of mapping the major amount of genes possible: (1) the Metazoa dataset from [OrthoDB](https://www.orthodb.org/?level=33208&species=33208), (2) the annotation of [_P. naikaiensis_](https://doi.org/10.1093/gigascience/giz023), and (3) a custom dataset of orthogroups inferred from [published transcriptomes](https://www.ncbi.nlm.nih.gov/sra/?term=Xenacoelomorpha).
+
+After merging the three datasets into one fasta, I used [ProtHint](https://github.com/gatech-genemark/ProtHint) to map them to the genome:
+
+    # The concatenated fasta file is called 'All_references.faa'
+    
+    # Remove redundancies
+    
+    
+    # Map them to the genome
+    prothint.py --threads 10 --cleanup --evalue 1e-25 pt_087_001_flye20211205meta.Metazoa.Clean.fasta.masked All_references.cdhit.0.90.faa
+
 
 ### 4. Annotation
