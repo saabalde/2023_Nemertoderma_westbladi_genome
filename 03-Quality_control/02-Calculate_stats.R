@@ -8,8 +8,8 @@ library(reshape2)
 library(tidyr)
 
 
-## Set the working directory
-setwd("/home/saabalde/Escritorio/Nwestbladi_genome/00-Figures/")
+## Set the working directory (if necessary)
+#setwd("")
 
 
 ## Load the data
