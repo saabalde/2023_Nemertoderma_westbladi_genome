@@ -53,14 +53,23 @@ Ideally, we should have sequenced a transcriptome from the same organism that wa
 
 With the reads clean, we can map them to the genome. After a careful screening of the literature and tutorials, it seems that the best mapping algorithms are [STAR](https://github.com/alexdobin/STAR) and [TopHat](https://ccb.jhu.edu/software/tophat/index.shtml). STAR is generally considered as faster and more accurate, but if RAM is a limiting factor then TopHat is the wat to go. In my case, I could use STAR.
 
-Besides the transcriptomes and the genome, STAR can use alternative sources of evidence to improve the quality of the mapping. In this case, I used 
+Besides the transcriptomes and the genome, STAR can use alternative sources of evidence to improve the quality of the mapping. In this case, I used the complete genes identified by BUSCO in the previous step, following [this tutorial](https://darencard.net/blog/2020-07-23-augustus-optimization/#:~:text=BUSCO%20can%2C%20therefore%2C%20be%20co,it%20also%20utilizes%20multiple%20cores.) to conver the results to a GTF file. I share the script 'Prepare_GTF.sh', which is fully commented and is easy to follow but, please, note that the paths to the files might change. The output file is called ''Nwestbladi.133genes.gtf'.
 
+Now, we can prepare the reference genome. Here it is important to note two things: I stored the reference genome in the "Genome" directory, and the parameters "--genomeSAindexNbases" and "--genomeChrBinNbits" are genome specific, so you should follow the instructions in the manual to calculate the best values for your genome.
 
-First, prepare the reference genome. Here it is important to note two things: I stored the reference genome in the "Genome" directory, and the parameters "--genomeSAindexNbases" and "--genomeChrBinNbits" are genome specific, so you should follow the instructions in the manual to calculate the best values for your genome.
-
-    STAR --runThreadN 10 --runMode genomeGenerate --genomeDir Genome --genomeFastaFiles Genome/pt_087_CleanAssembly.nomtDNA.fasta.masked \
+    STAR --runThreadN 10 --runMode genomeGenerate --genomeDir Genome --genomeFastaFiles Genome/pt_087_001_flye20211205meta.Metazoa.Clean.fasta.masked \
          --sjdbGTFfile Nwestbladi.133genes.gtf --sjdbOverhang 100 --genomeSAindexNbases 13 --genomeChrBinNbits 15
 
+Once the genome is indexed, we can map the reads to the genome:
+
+    STAR --runThreadN 10 --genomeDir Genome --readFilesIn SRR2682004_good_1.fastq.gz SRR2682004_good_2.fastq.gz --readFilesCommand zcat \
+         --outFileNamePrefix SRR2682004 --outSAMtype BAM SortedByCoordinate --outBAMsortingThreadN 1 \
+         --chimSegmentMin 40 --twopassMode Basic --limitBAMsortRAM 14500000000
+
+Once you have done this for the two files, you can merge them with [samtools](https://github.com/samtools/samtools):
+
+    samtools merge RNAseq_mapped.bam SRR2682004Aligned.sortedByCoord.out.bam SRR8491950Aligned.sortedByCoord.out.bam
+    samtools sort RNAseq_mapped.bam -o RNAseq_mapped.sorted.bam
 
 ### 3. Protein mapping
 
