@@ -21,24 +21,20 @@ done) > metazoa_odb10.info.txt
 cat <(cat metazoa_odb10.info.txt | head -1) \
 <(cat metazoa_odb10.info.txt | grep -v "^#" | sort -t $'\t' -k5,5nr -k7,7nr -k4,4n) > metazoa_odb10.info.ranked.txt
 
-
 ## We run BUSCO, returning this result: C:77.3%[S:55.6%,D:21.7%],F:4.1%,M:18.6%,n:954
-
 
 ## Now, from the BUSCO output we need to extract the Complete and Single-Copy genes
 cat metazoa_odb10.info.ranked.txt | grep -v "^#" | cut -f 1 | \
 while read id; \
 do \
-status=`cat ../../05-QC_BUSCO_CleanAssembly/05-BUSCO_odb10/run_Nwestbladi_clean_busco_odb10/full_table_Nwestbladi_clean_busco_odb10.tsv | awk -v id="${id}" '{ if ($1 == id) print $2 }' | sort | uniq`; \
-file="../../05-QC_BUSCO_CleanAssembly/05-BUSCO_odb10/run_Nwestbladi_clean_busco_odb10/augustus_output/extracted_proteins/"${id}".faa.1"; \
+status=`cat ../03-Quality_control/run_Nwestbladi_clean_busco_odb10/full_table_Nwestbladi_clean_busco_odb10.tsv | awk -v id="${id}" '{ if ($1 == id) print $2 }' | sort | uniq`; \
+file="../03-Quality_control/run_Nwestbladi_clean_busco_odb10/augustus_output/extracted_proteins/"${id}".faa.1"; \
 count=`cat ${file} | grep -c ">"`; \
 echo -e "${status}\t${count}\t${file}" | awk '{ if ($1 == "Complete" && $2 == 1) print $3 }'; \
 done > Nwestbladi_complete_singlecopy.aafiles.txt
 
-
 ## 133 genes were extracted during the previous step. I was expecting 530 complete and single-copy genes, but some of them contained
 ## more than one sequence. This dataset is smaller, but we are certain that we are dealing with complete, single-copy genes.
-
 
 ## Now we rename the sequences in the fasta files. Augustus includes a "g1" symbol by default, and we want to remove it.
 cat Nwestbladi_complete_singlecopy.aafiles.txt | \
@@ -48,16 +44,13 @@ id=`basename ${file} .faa.1`; \
 cat ${file} | seqkit fx2tab | awk -v id="${id}" -v OFS="\t" '{ print id, $2 }' | seqkit tab2fx; \
 done > Nwestbladi_complete_singlecopy.seqs.rename.fasta
 
-
 ## Now that we have a fasta file with our sequences, we can run cd-hit to remove sequences too similar (>80%)
 cd-hit -o Nwestbladi_complete_singlecopy.seqs.rename.cdhit -c 0.8 -i Nwestbladi_complete_singlecopy.seqs.rename.fasta -p 1 -d 0 -b 3 -T 0 -M 10000
 
 # let's rename the default FASTA output to provide an extension
 mv Nwestbladi_complete_singlecopy.seqs.rename.cdhit Nwestbladi_complete_singlecopy.seqs.rename.cdhit.fasta
 
-
 ## No sequences were clustered, which means we still have 133 genes to work with.
-
 
 ## Prepare a list with the names of the 133 genes.
 grep '>' Nwestbladi_complete_singlecopy.seqs.rename.cdhit.fasta | sed 's/>//g' | sort | uniq > Nwestbladi_complete_singlecopy.seqs.rename.cdhit.names
@@ -71,15 +64,12 @@ done | \
 tr -d ">" | head -323 | \
 while read busco; \
 do \
-cat ../../05-QC_BUSCO_CleanAssembly/05-BUSCO_odb10/run_Nwestbladi_clean_busco_odb10/augustus_output/predicted_genes/${busco}.out.1 | sed "s/g1/g${counter}/g"; \
+cat ../03-Quality_control/run_Nwestbladi_clean_busco_odb10/augustus_output/predicted_genes/${busco}.out.1 | sed "s/g1/g${counter}/g"; \
 let counter+=1; \
 done | \
 grep -v "^#" | sort -k1,1 -k4,4n > Nwestbladi.133genes.gff
 
-
 ## Convert the GFF file to GTF.
-/home/saabalde/Escritorio/software/gffread/gffread -g pt_087_CleanAssembly.nomtDNA.fasta -T -o Nwestbladi.133genes.gtf Nwestbladi.133genes.gff
+gffread -g pt_087_001_flye20211205meta.Metazoa.Clean.fasta -T -o Nwestbladi.133genes.gtf Nwestbladi.133genes.gff
 
 ## gffread failed to find some of the sequences and the output contains only 132 transcripts.
-
-
