@@ -7,8 +7,8 @@ library(ggplot2)
 library(reshape2)
 
 
-## Set the working directory
-setwd("/home/saabalde/Escritorio/Nwestbladi_genome/00-Figures/")
+## Set the working directory (if needed)
+#setwd("")
 
 
 ## Load the data
