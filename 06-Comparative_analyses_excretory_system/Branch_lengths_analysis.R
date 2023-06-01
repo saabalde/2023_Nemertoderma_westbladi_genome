@@ -290,7 +290,5 @@ pairwise.t.test(subset$Branch_length, subset$Main_clade, p.adjust.method = "bonf
 ## Save all plots ##
 ####################
 
-ggsave(Boxplot.BranchLengths, file="Branch_lengths_analysis.Boxplot.tiff", device = "tiff", dpi = 300, bg = NULL,
-       width = 25, height = 20, units = "cm")
 ggsave(Barplot.BranchLengths, file="Branch_lengths_analysis.Barplot.tiff", device = "tiff", dpi = 300, bg = NULL,
        width = 25, height = 20, units = "cm")
