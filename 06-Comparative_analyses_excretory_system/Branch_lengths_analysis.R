@@ -148,38 +148,7 @@ write.table(Ultrafiltration_BranchLengths, file = "Branch_lengths_analysis.txt",
 #Ultrafiltration_BranchLengths <- read.table(file = "Branch_lengths_analysis.txt", header = TRUE, sep = ",")
 
 
-## Plot the boxplot
-Boxplot.BranchLengths <- ggplot(Ultrafiltration_BranchLengths, aes(x = Gene, y = Branch_length, fill = Main_clade)) + 
-  geom_boxplot() + 
-  scale_y_continuous(limits = c(0, 7), n.breaks = 14) + 
-  guides(fill=guide_legend(title="Clades")) + 
-  theme_light(base_size = 8) + 
-  scale_fill_manual(values = c("#EB9F17", "#EB3717", "#2877D1", "#00B366")) + 
-  ggtitle("Branch Length of All Sequences per Gene and Clade") + 
-  xlab("") +  ylab("Branch length") + 
-  theme(plot.title = element_text(family = "sans", colour = "black", size = rel(2.2), face = "bold")) + 
-  theme(legend.position = "top",legend.title = element_blank()) + 
-  theme(legend.text = element_text(family = "sans", size = rel(1.5))) + 
-  theme(panel.background = element_rect(color = "#FFFFFF", fill = "white")) + 
-  theme(panel.grid.minor = element_blank()) + 
-  theme(axis.text.y = element_text(family = "sans", colour = "black", size = rel(2))) + 
-  theme(axis.text.x = element_text(family = "sans", colour = "black", size = rel(2))) + 
-  theme(axis.line = element_line(linewidth = 1, colour = "black")) + 
-  theme(axis.ticks.length = unit(0, "cm")) + 
-  theme(axis.ticks.y = element_line(colour = "#222222")) + 
-  theme(axis.ticks.x = element_line(colour = "#222222")) + 
-  theme(axis.ticks.length = unit(0.4, "cm")) + 
-  theme(axis.title.x = element_text(family = "sans", size = rel(2))) + 
-  theme(axis.title.y = element_text(family = "sans", size = rel(2))) + 
-  guides(fill = guide_legend(override.aes = list(colour = NULL))) +
-  guides(fill = guide_legend(nrow = 1, byrow = TRUE))
-
-Boxplot.BranchLengths
-
-################################################################################
-
-## this does not look so good, so I will plot a barplot with the average branch 
-## length
+## Calculate the average branch length per clade and gene
 Ultrafiltration_BranchLengths_Average <- data.frame(Main_clade = rep(NA, times = (length(clades) * length(genes))),
                                                     Gene = rep(NA, times = (length(clades) * length(genes))),
                                                     Branch_length = rep(NA, times = (length(clades) * length(genes))),
