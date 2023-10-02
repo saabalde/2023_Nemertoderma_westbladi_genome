@@ -11,7 +11,7 @@ This repository contains a step-by-step description of the analyses, from read f
 <ul>
     <li><strong>Raw sequencing data:</strong> <a href="https://www.ncbi.nlm.nih.gov/sra/SRX20664382[accn]">Illumina</a> and <a href="https://www.ncbi.nlm.nih.gov/sra/SRX20664381[accn]">HiFi</a> reads.</li>
     <li><strong>Genome assembly</strong> is available through the <a href="https://www.ncbi.nlm.nih.gov/genome/?term=nemertoderma">NCBI database</a>.</li>
-    <li><strong>These files, as well as other intermediate files</strong> including BUSCO reports and annotations, have been uploaded to <a href="https://figshare.com/projects/2023_Nemertoderma_westbladi_genome/169818">Figshare</a>.</li>
+    <li><strong>These</strong>, as well as <strong>other intermediate files</strong> including BUSCO reports and annotations, have been uploaded to <a href="https://figshare.com/projects/2023_Nemertoderma_westbladi_genome/169818">Figshare</a>.</li>
 </ul>
 
 ## Citation
