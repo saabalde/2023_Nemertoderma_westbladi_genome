@@ -9,14 +9,14 @@ This repository contains a step by step description of the analyses, from read f
 
 ### Data availability:
 <ul>
-    <li><strong>Raw sequencing data:</strong> <a href="https://www.ncbi.nlm.nih.gov/nuccore/?term=ON951339:ON951583[accn]">Illumina</a> and <a href="https://www.ncbi.nlm.nih.gov/nuccore/AY588229">HiFi</a> reads.</li>
-    <li><strong>Genome assembly</strong> is available through the <a href="https://www.ncbi.nlm.nih.gov/nuccore/?term=ON968966%3AON968984%5Baccn%5D">NCBI database</a>.</li>
-    <li><strong>All intermediate files</strong>, including BUSCO reports and annotations, have been uploaded to <a href="https://www.ncbi.nlm.nih.gov/sra/?term=PRJNA856832">Dryad</a>.</li>
+    <li><strong>Raw sequencing data:</strong> <a href="https://www.ncbi.nlm.nih.gov/sra/SRX20664382[accn]">Illumina</a> and <a href="https://www.ncbi.nlm.nih.gov/sra/SRX20664381[accn]">HiFi</a> reads.</li>
+    <li><strong>Genome assembly</strong> is available through the <a href="https://www.ncbi.nlm.nih.gov/genome/?term=nemertoderma">NCBI database</a>.</li>
+    <li><strong>These files, as well as other intermediate files</strong> including BUSCO reports and annotations, have been uploaded to <a href="https://figshare.com/projects/2023_Nemertoderma_westbladi_genome/169818">Figshare</a>.</li>
 </ul>
 
 ## Citation
 <ul>
-  <li>Abalde, S., Tellgren-Roth, C., Heintz, J., Vinnere-Pettersson, O., and Jondelius, U. (submitted). TITLE. <a href="https://www.ncbi.nlm.nih.gov/nuccore/?term=ON951339:ON951583[accn]">bioRxiv</a>.</li>
+  <li>Abalde, S., Tellgren-Roth, C., Heintz, J., Vinnere-Pettersson, O., and Jondelius, U. (2023). The draft genome of the microscopic <i>Nemertoderma westbladi</i> sheds light on the evolution of Acoelomorpha genomes. <a href="https://www.frontiersin.org/articles/10.3389/fgene.2023.1244493/full">Frontiers in Genetics</a>, 14: 1244493.</li>
 </ul>
 
 ---
