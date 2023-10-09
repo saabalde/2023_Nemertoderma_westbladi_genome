@@ -61,8 +61,8 @@ Finally, run kmerdedup to remove all redundancies. To find the best parameters, 
                       -f pt_087_001_flye20211205meta.fasta.reformat.fasta -bam pt_087_001_flye20211205meta.fasta.ba -cov pt_087_001_flye20211205meta.fasta.cov.stat \
                       -s /home/bin/samtools
 
-Once finished, we used BUSCO to find the best assembly: the one with the minimum duplicates while keeping the best completeness.
+Once finished, we used BUSCO to find the best assembly: the one with the minimum duplicates while keeping the best completeness. We decided to continue with a max duplication percentage of 30% (-mpr 0.3):
 
-![image](https://github.com/saabalde/2023_Nemertoderma_westbladi_genome/blob/main/02-Genome_decontamination/Nwestbladi_blobplot.png)
+![image](https://github.com/saabalde/2023_Nemertoderma_westbladi_genome/blob/main/01-Read_filtering_and_assembly/03-BUSCO_scores-Metazoa.png)
 
 ---
