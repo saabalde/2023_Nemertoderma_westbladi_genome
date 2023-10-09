@@ -63,6 +63,6 @@ Finally, run kmerdedup to remove all redundancies. To find the best parameters, 
 
 Once finished, we used BUSCO to find the best assembly: the one with the minimum duplicates while keeping the best completeness. We decided to continue with a max duplication percentage of 30% (-mpr 0.3):
 
-![image](https://github.com/saabalde/2023_Nemertoderma_westbladi_genome/blob/main/01-Read_filtering_and_assembly/03-BUSCO_scores-Metazoa.png)
+![image](https://github.com/saabalde/2023_Nemertoderma_westbladi_genome/blob/main/01-Read_filtering_and_assembly/KmerDedup_comparisons.png)
 
 ---
